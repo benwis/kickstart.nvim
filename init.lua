@@ -316,6 +316,11 @@ require('lazy').setup({
     },
   },
   {
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+    opts = {},
+  },
+  {
     'iamcco/markdown-preview.nvim',
     cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
     ft = { 'markdown' },
@@ -354,13 +359,22 @@ require('lazy').setup({
 
       -- Document existing key chains
       require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-        ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+        {
+          { '<leader>c', group = '[C]ode' },
+          { '<leader>c_', hidden = true },
+          { '<leader>d', group = '[D]ocument' },
+          { '<leader>d_', hidden = true },
+          { '<leader>h', group = 'Git [H]unk' },
+          { '<leader>h_', hidden = true },
+          { '<leader>r', group = '[R]ename' },
+          { '<leader>r_', hidden = true },
+          { '<leader>s', group = '[S]earch' },
+          { '<leader>s_', hidden = true },
+          { '<leader>t', group = '[T]oggle' },
+          { '<leader>t_', hidden = true },
+          { '<leader>w', group = '[W]orkspace' },
+          { '<leader>w_', hidden = true },
+        },
       }
       -- visual mode
       require('which-key').register({
@@ -680,7 +694,6 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'rustfmt', -- Used to format Rust code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -731,7 +744,8 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = { { 'prettierd', 'prettier' } },
+        typescript = { { 'prettierd', 'prettier' } },
       },
     },
   },
@@ -792,9 +806,9 @@ require('lazy').setup({
         -- No, but seriously. Please read `:help ins-completion`, it is really good!
         mapping = cmp.mapping.preset.insert {
           -- Select the [n]ext item
-          ['<C-n>'] = cmp.mapping.select_next_item(),
+          --['<C-n>'] = cmp.mapping.select_next_item(),
           -- Select the [p]revious item
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
+          --['<C-p>'] = cmp.mapping.select_prev_item(),
 
           -- Scroll the documentation window [b]ack / [f]orward
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -803,13 +817,13 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          --['<C-y>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          ['<CR>'] = cmp.mapping.confirm { select = true },
+          ['<Tab>'] = cmp.mapping.select_next_item(),
+          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
@@ -1008,6 +1022,9 @@ vim.g.rustaceanvim = {
           buildScripts = {
             enable = true,
           },
+          check = {
+            extraArgs = { '--target-dir', '${workspaceFolder}/target/check' },
+          },
         },
         rustfmt = {
           overrideCommand = { 'leptosfmt', '--stdin', '--rustfmt' },
@@ -1029,4 +1046,3 @@ vim.g.rustaceanvim = {
   -- DAP configuration
   dap = {},
 }
-log_level = vim.log.levels.DEBUG
