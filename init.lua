@@ -15,7 +15,7 @@
 ========         `"")----------------(""`   ___________      ========
 ========        /::::::::::|  |::::::::::\  \ no mouse \     ========
 ========       /:::========|  |==hjkl==:::\  \ required \    ========
-========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
+
 ========                                                     ========
 =====================================================================
 =====================================================================
@@ -167,6 +167,40 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+-- Error Diagnostic keymap
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open diagnostic [E]rror that the cursor is currently over' })
+
+-- Move lines with J and K
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+
+-- Keep cursor in place when doing ctrl-d and ctrl-u, which move the page half a page up or down
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
+
+-- Add the option to not overwrite the yank buffer with the recently deleted item when pasting over a selection, allowing multiple pastes of the same thing
+vim.keymap.set('x', '<leader>p', '"_dP')
+
+-- Delete into the void for when you don't want the deleted thing in the buffer
+vim.keymap.set('n', '<leader>d', '"_d')
+vim.keymap.set('v', '<leader>d', '"_d')
+
+-- Yank into system clipboard
+vim.keymap.set('n', '<leader>y', '"+y')
+vim.keymap.set('v', '<leader>y', '"+y')
+vim.keymap.set('n', '<leader>Y', '"+Y')
+
+-- Format the current buffer
+vim.keymap.set('n', '<leader>f', function()
+  vim.lsp.buf.format()
+end)
+
+-- Replace the curent word that is selected
+vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+
+-- What if you could make a bash script executable from within the file
+vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<CR>', { silent = true })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -488,6 +522,19 @@ require('lazy').setup({
     tag = 'stable',
     config = function()
       require('crates').setup()
+    end,
+  },
+  { 'akinsho/toggleterm.nvim', version = '*', opts = {
+    open_mapping = [[<C-/>]],
+  } },
+  {
+    'kylechui/nvim-surround',
+    version = '*', -- Use for stability; omit to use `main` branch for the latest features
+    event = 'VeryLazy',
+    config = function()
+      require('nvim-surround').setup {
+        -- Configuration here, or leave empty to use defaults
+      }
     end,
   },
 
@@ -893,11 +940,10 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { 'prettierd', 'prettier' } },
-        typescript = { { 'prettierd', 'prettier', stop_after_first = true },
-        javascript = { 'prettierd', 'prettier' } },
-        typescript = { { 'prettierd', 'prettier', stop_after_first = true },
+        javascript = { 'prettierd', 'prettier' },
       },
+      typescript = { { 'prettierd', 'prettier', stop_after_first = true }, javascript = { 'prettierd', 'prettier' } },
+      typescript = { { 'prettierd', 'prettier', stop_after_first = true } },
     },
   },
 
