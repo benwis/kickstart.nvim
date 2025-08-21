@@ -225,6 +225,16 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Toggle Snacks Explorer with <leader>e
+vim.keymap.set('n', '<leader>e', function()
+  Snacks.explorer()
+end, { desc = 'Toggle Snacks Explorer' })
+
+-- Explorer at project root
+vim.keymap.set('n', '<leader>E', function()
+  Snacks.explorer { cwd = vim.fn.getcwd(-1, 0) } -- or your own project-root resolver
+end, { desc = 'Explorer (cwd)' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -527,6 +537,25 @@ require('lazy').setup({
   { 'akinsho/toggleterm.nvim', version = '*', opts = {
     open_mapping = [[<C-/>]],
   } },
+  {
+    'folke/snacks.nvim',
+    ---@type snacks.Config
+    opts = {
+      explorer = {
+        -- your explorer configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      },
+      picker = {
+        sources = {
+          explorer = {
+            -- your explorer picker configuration comes here
+            -- or leave it empty to use the default settings
+          },
+        },
+      },
+    },
+  },
   {
     'kylechui/nvim-surround',
     version = '*', -- Use for stability; omit to use `main` branch for the latest features
